@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+  - "https://demo-orders.hasura.app/v1/graphql":
+      headers:
+        X-HASURA-ADMIN-SECRET: "EcB7JDhOnz4JDGHaWFfuPqa9EgXx3fnSzHhSfjfMawxtfZfcf9wLpGuYJjzLguN2"
+
+documents:
+  - "./src/**/*.ts"
+  - "./src/**/*.tsx"
+  - "src/**/*.graphql"
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql
