@@ -3,7 +3,7 @@ Multipart Uploads - Apollo Server wrapping S3 API (useful for Hasura Remote Sche
 
 ```
 pnpm install
-pnpm generate
+(if needed) pnpm generate
 pnpm start:lambda
 pnpm run:dev
 ```
