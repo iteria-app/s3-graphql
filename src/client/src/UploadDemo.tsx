@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import FileDownload from './components/upload/Download'
-import FileUpload from './components/upload/Upload'
+import FileUpload, { OnChangeOptions } from './components/upload/Upload'
 import { getUppy } from './components/uppy/uppy'
 import { UppyFile } from '@uppy/core'
 import { useClient } from 'urql'
+
 
 function UploadDemo({}) {
   const [isUploading, setUploading] = useState(false)
@@ -19,7 +20,9 @@ function UploadDemo({}) {
     </div>
   )
 
+
   function handleUploadStateChange({ isUploading, files, uploadedFiles }: OnChangeOptions) {
+    debugger
     setUploading(isUploading)
     setFiles(files)
     setUploadedFiles(uploadedFiles)
