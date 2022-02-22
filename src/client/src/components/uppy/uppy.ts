@@ -13,6 +13,7 @@ import {
   CreateMultipartUploadReturn,
   ListPartsDocument,
   ListPartsQueryVariables,
+  useDownloadGetUrlQuery,
 } from '../../../../generated/graphql'
 import { createRequest } from 'urql'
 import type { Client } from 'urql'
@@ -25,6 +26,22 @@ function getUploadedParts(uploadId: string) {
   const _uploadedParts = uploadedParts[uploadId] || []
   uploadedParts[uploadId] = _uploadedParts
   return _uploadedParts
+}
+
+export function getDownloadUrl(fileKey:string){
+  const [result] = useDownloadGetUrlQuery({
+    variables: {
+      fileKey: fileKey,
+    },
+    pause: !fileKey,
+  })
+  if (fileKey && result.data) {
+    const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn }
+    if (!downloadGetUrl || !downloadGetUrl.url) throw Error(result.error ? result.error.message : 'No download url found')
+    const { url } = downloadGetUrl
+    return url
+  }
+  return ''
 }
 
 ;(window as any)['uploadedParts'] = uploadedParts

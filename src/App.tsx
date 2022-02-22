@@ -4,7 +4,7 @@ import './App.css'
 import { createClient, Provider } from 'urql';
 
 const client = createClient({
-  url: 'https://demo-orders.hasura.app/v1/graphql',
+  url: 'https://akular-devel.hasura.app/v1/graphql',
 });
 function App() {
 
