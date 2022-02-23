@@ -158,6 +158,7 @@ exports.handler = (
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    introspection: true,
     context:{
       accessKeyId: event.headers.accesskeyid,
       secretAccessKey: event.headers.secretaccesskey,
