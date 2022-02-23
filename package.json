@@ -5,6 +5,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
+    "build:lambda": "netlify-lambda --config ./webpack.lambda.js build src/lambda-server/server-functions",
     "start:lambda": "netlify-lambda --config ./webpack.lambda.js serve src/lambda-server/server-functions",
     "debug": "npx --node-arg=--inspect  netlify-lambda -t 100 --config ./webpack.lambda.js serve src/lambda-server/server-functions",
     "generate": "graphql-codegen --config codegen.yaml"
