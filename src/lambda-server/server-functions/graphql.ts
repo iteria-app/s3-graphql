@@ -88,7 +88,7 @@ const resolvers = {
       checkHeaders(context)
       const s3 = getS3(context)
       let urls: string[]
-      urls=[]
+      urls=['test']
       await args.fileKeys.reduce(async (promise, fileKey) => {
         await promise;
         const url = await s3.getSignedUrlPromise('getObject', {
