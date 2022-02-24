@@ -26,7 +26,7 @@ const typeDefs = gql`
     url: String!
   }
   type GetUrlsReturn{
-    url: [String]!
+    urls: [String]!
   }
     type Query {
         file: File
