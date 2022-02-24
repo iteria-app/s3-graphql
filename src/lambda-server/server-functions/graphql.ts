@@ -89,7 +89,8 @@ const resolvers = {
       const s3 = getS3(context)
       let urls: string[]
       urls=[]
-      args.fileKeys.forEach(async fileKey => {
+      await args.fileKeys.reduce(async (promise, fileKey) => {
+        await promise;
         const url = await s3.getSignedUrlPromise('getObject', {
           Bucket: context.bucketName,
           Key: fileKey,
@@ -97,7 +98,8 @@ const resolvers = {
         })
         const origin = new URL(url).origin//origin replace? minio specific?
         urls.push(url)
-      })
+      }, Promise.resolve());
+      
       return { urls }
     },
     downloadGetUrl: async (parent: undefined, args: downloadGetUrlArgs, context: ServerContext) => {
