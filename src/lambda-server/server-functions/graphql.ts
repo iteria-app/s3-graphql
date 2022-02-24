@@ -1,9 +1,10 @@
 import { ApolloServer, gql } from 'apollo-server-lambda';
 import { Handler, Context, Callback, APIGatewayEvent } from 'aws-lambda'
+import { findDOMNode } from 'react-dom';
 import { checkHeaders } from '../helpers/checkHeaders';
 import { abortMultipartUpload, completeMultipartUpload, getS3, getUrlsForParts, initS3Upload, listParts } from '../s3';
 import { ServerContext } from '../s3/types';
- 
+
 const typeDefs = gql` 
   type File{
     id: ID
@@ -21,12 +22,16 @@ const typeDefs = gql`
     size: Int
     ETag: String
   }  
-    type GetUrlReturn{
-      url: String!
-    }
+  type GetUrlReturn{
+    url: String!
+  }
+  type GetUrlsReturn{
+    url: [String]!
+  }
     type Query {
         file: File
         part: Part
+        downloadGetUrls(fileKeys: [String]!):GetUrlsReturn
         downloadGetUrl(fileKey: String!):GetUrlReturn
         prepareUploadParts(fileKey: String!, uploadId: String!, partNumber: Int!):GetUrlReturn
         listParts(fileKey: String!, uploadId: String!):Part
@@ -48,12 +53,15 @@ const typeDefs = gql`
     }
        
 `;
-type downloadGetUrlArgs ={
+type downloadGetUrlArgs = {
   fileKey: string
+}
+type downloadGetUrlsArgs = {
+  fileKeys: string[]
 }
 type prepareUploadPartsArgs = {
   fileKey: string
-  uploadId: string 
+  uploadId: string
   partNumber: number
 }
 type createMultipartUploadArgs = {
@@ -76,6 +84,22 @@ type completeMultipartUploadArgs = {
 }
 const resolvers = {
   Query: {
+    downloadGetUrls: async (parent: undefined, args: downloadGetUrlsArgs, context: ServerContext) => {
+      checkHeaders(context)
+      const s3 = getS3(context)
+      let urls: string[]
+      urls=[]
+      args.fileKeys.forEach(async fileKey => {
+        const url = await s3.getSignedUrlPromise('getObject', {
+          Bucket: context.bucketName,
+          Key: fileKey,
+          Expires: context.urlExpiration,
+        })
+        const origin = new URL(url).origin//origin replace? minio specific?
+        urls.push(url)
+      })
+      return { urls }
+    },
     downloadGetUrl: async (parent: undefined, args: downloadGetUrlArgs, context: ServerContext) => {
       checkHeaders(context)
       const s3 = getS3(context)
@@ -85,24 +109,24 @@ const resolvers = {
         Key: fileKey,
         Expires: context.urlExpiration,
       })
-            const origin = new URL(url).origin//origin replace? minio specific?
-      return {url}
+      const origin = new URL(url).origin//origin replace? minio specific?
+      return { url }
     },
     prepareUploadParts: async (parent: undefined, args: prepareUploadPartsArgs, context: ServerContext) => {
       checkHeaders(context)
       const uploadId = args.uploadId
-      const fileKey  = args.fileKey 
+      const fileKey = args.fileKey
       const partNumber = args.partNumber
       const url = await getUrlsForParts(context, uploadId, fileKey, partNumber)
       const origin = new URL(url).origin //not sure replecament
-      return {url}
+      return { url }
     },
     listParts: async (parent: undefined, args: uploadArgs, context: ServerContext) => {
       checkHeaders(context)
-      const uploadId = args.uploadId 
+      const uploadId = args.uploadId
       const fileKey = args.fileKey
-      const parts = await listParts(context, uploadId, fileKey )
-      return {parts}
+      const parts = await listParts(context, uploadId, fileKey)
+      return { parts }
     },
 
   },
@@ -112,7 +136,7 @@ const resolvers = {
       const fileKey = args.fileKey
       const metadata = args.metadata
       console.log(fileKey, metadata)
-      const { uploadId, key } = await initS3Upload( context, fileKey, metadata )
+      const { uploadId, key } = await initS3Upload(context, fileKey, metadata)
       return { uploadId, key }
     },
     abortMultipartUpload: async (parent: undefined, args: uploadArgs, context: ServerContext) => {
@@ -126,15 +150,15 @@ const resolvers = {
           await abortMultipartUpload(context, uploadId, fileKey)
         } while (parts.length > 0) {
           message = 'success'
-          return {message}
+          return { message }
         }
       } catch (error: any) {
         if (error.code === 'NoSuchUpload') {
           message = 'no such upload'
-          return {message}
-        }else{
+          return { message }
+        } else {
           throw error
-        } 
+        }
 
       }
     },
@@ -144,7 +168,7 @@ const resolvers = {
       const uploadId = args.uploadId
       const parts = args.parts
       const location: string | undefined = await completeMultipartUpload(context, uploadId, fileKey, parts)
-      return {location}
+      return { location }
     }
   }
 };
@@ -159,7 +183,7 @@ exports.handler = (
     typeDefs,
     resolvers,
     introspection: true,
-    context:{
+    context: {
       accessKeyId: event.headers.accesskeyid,
       secretAccessKey: event.headers.secretaccesskey,
       region: event.headers.region,
