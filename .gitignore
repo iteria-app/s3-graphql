@@ -4,6 +4,7 @@ built-lambda-server
 dist
 dist-ssr
 *.local
+codegen.yaml
 
 
 # Logs
