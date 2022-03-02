@@ -1,8 +1,8 @@
 overwrite: true
 schema:
-  - "https://demo-orders.hasura.app/v1/graphql":
+  - "https://akular-devel.hasura.app/v1/graphql":
       headers:
-        X-HASURA-ADMIN-SECRET: "EcB7JDhOnz4JDGHaWFfuPqa9EgXx3fnSzHhSfjfMawxtfZfcf9wLpGuYJjzLguN2"
+        X-HASURA-ADMIN-SECRET: "wv43mDFwmO1cR2Lyy4LQODqgsH09in3xzSV3U39SJCQpftmvcOqTiy7rc1C8jgeJ"
 
 documents:
   - "./src/**/*.ts"
