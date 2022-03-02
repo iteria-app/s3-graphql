@@ -14,11 +14,11 @@ import {
   ListPartsDocument,
   ListPartsQueryVariables,
   useDownloadGetUrlQuery,
-} from '../../../../generated/graphql'
+  useDownloadGetUrlsQuery,
+  GetUrlsReturn,
+} from './graphql'
 import { createRequest } from 'urql'
 import type { Client } from 'urql'
-
-let uppy: Uppy
 
 const uploadedParts: { [x: string]: any[] } = {}
 
@@ -28,7 +28,28 @@ function getUploadedParts(uploadId: string) {
   return _uploadedParts
 }
 
-export function getDownloadUrl(fileKey:string){
+;(window as any)['uploadedParts'] = uploadedParts
+
+export function getDownloadUrls(fileKeys: string[]) {
+  const [result] = useDownloadGetUrlsQuery({
+    variables: {
+      fileKeys: fileKeys,
+    },
+    pause: !fileKeys,
+  })
+  if (fileKeys && result.data) {
+    const { downloadGetUrls } = result.data as {
+      downloadGetUrls: GetUrlsReturn
+    }
+    if (!downloadGetUrls || !downloadGetUrls.urls)
+      throw Error(result.error ? result.error.message : 'No download url found')
+    const { urls } = downloadGetUrls
+    return urls
+  }
+  return ''
+}
+
+export function getDownloadUrl(fileKey: string) {
   const [result] = useDownloadGetUrlQuery({
     variables: {
       fileKey: fileKey,
@@ -37,40 +58,42 @@ export function getDownloadUrl(fileKey:string){
   })
   if (fileKey && result.data) {
     const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn }
-    if (!downloadGetUrl || !downloadGetUrl.url) throw Error(result.error ? result.error.message : 'No download url found')
+    if (!downloadGetUrl || !downloadGetUrl.url)
+      throw Error(result.error ? result.error.message : 'No download url found')
     const { url } = downloadGetUrl
     return url
   }
   return ''
 }
 
-;(window as any)['uploadedParts'] = uploadedParts
+export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
+  const uppy = new Uppy({
+    meta: { type: 'avatar' },
+    restrictions: {
+      allowedFileTypes: allowedFileTypes,
+    },
+    autoProceed: true,
+    debug: true,
+  })
+  uppy.use(AwsS3Multipart, {
+    createMultipartUpload,
+    prepareUploadParts,
+    listParts,
+    completeMultipartUpload,
+    abortMultipartUpload,
+  })
 
-export function getUppy(urqlClient: Client) {
-  if (!uppy) {
-    uppy = new Uppy({
-      meta: { type: 'avatar' },
-      restrictions: {},
-      autoProceed: false,
-    })
-    uppy.use(AwsS3Multipart, {
-      createMultipartUpload,
-      prepareUploadParts,
-      listParts,
-      completeMultipartUpload,
-      abortMultipartUpload,
-    })
-
-    uppy.on('s3-multipart:part-uploaded' as any, (file: any, part: any) => {
-      const uploadedParts = getUploadedParts(file.s3Multipart.uploadId)
-      uploadedParts.push(part)
-    })
-    ;(window as any)['uppy'] = uppy
-  }
+  uppy.on('s3-multipart:part-uploaded' as any, (file: any, part: any) => {
+    const uploadedParts = getUploadedParts(file.s3Multipart.uploadId)
+    uploadedParts.push(part)
+  })
+  ;(window as any)['uppy'] = uppy
   return uppy
 
   // Initiate multipart upload
-  async function createMultipartUpload({ name }: UppyFile): Promise<{ key: string; uploadId: string }> {
+  async function createMultipartUpload({
+    name,
+  }: UppyFile): Promise<{ key: string; uploadId: string }> {
     const request = createRequest(CreateMultipartUploadDocument, {
       fileKey: name,
     })
@@ -80,7 +103,8 @@ export function getUppy(urqlClient: Client) {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) {
-              const { key, uploadId } = data.createMultipartUpload as CreateMultipartUploadReturn
+              const { key, uploadId } =
+                data.createMultipartUpload as CreateMultipartUploadReturn
               resolve({ key, uploadId })
             }
           }
@@ -118,7 +142,10 @@ export function getUppy(urqlClient: Client) {
     }
     return { presignedUrls: urls }
   }
-  async function listParts(file: any, { uploadId, key }: { uploadId: string; key: string }): Promise<AwsS3Part[]> {
+  async function listParts(
+    file: any,
+    { uploadId, key }: { uploadId: string; key: string }
+  ): Promise<AwsS3Part[]> {
     const request = createRequest(ListPartsDocument, {
       fileKey: key,
       uploadId,
@@ -136,7 +163,11 @@ export function getUppy(urqlClient: Client) {
                   PartNumber: part.PartNumber,
                   Size: part.Size,
                 }))
-                .filter((part) => getUploadedParts(uploadId).find((p) => p.PartNumber === part.PartNumber))
+                .filter((part) =>
+                  getUploadedParts(uploadId).find(
+                    (p) => p.PartNumber === part.PartNumber
+                  )
+                )
               r(_parts)
             }
           }
@@ -147,7 +178,10 @@ export function getUppy(urqlClient: Client) {
     })
   }
   //
-  async function completeMultipartUpload(file: any, { uploadId, key, parts }: any): Promise<{ location: string }> {
+  async function completeMultipartUpload(
+    file: any,
+    { uploadId, key, parts }: any
+  ): Promise<{ location: string }> {
     const request = createRequest(CompleteMultipartUploadDocument, {
       fileKey: key,
       uploadId,
@@ -159,7 +193,8 @@ export function getUppy(urqlClient: Client) {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) {
-              const { location } = data.completeMultipartUpload as CompleteMultipartUploadReturn
+              const { location } =
+                data.completeMultipartUpload as CompleteMultipartUploadReturn
               r({ location })
             }
           }
@@ -170,7 +205,10 @@ export function getUppy(urqlClient: Client) {
     })
   }
   //
-  async function abortMultipartUpload(file: any, { key, uploadId }: { key: string; uploadId: string }): Promise<void> {
+  async function abortMultipartUpload(
+    file: any,
+    { key, uploadId }: { key: string; uploadId: string }
+  ): Promise<void> {
     try {
       const request = createRequest(AbortMultipartUploadDocument, {
         fileKey: key,
