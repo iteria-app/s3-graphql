@@ -10,7 +10,7 @@ function UploadDemo({}) {
   const [isUploading, setUploading] = useState(false)
   const [files, setFiles] = useState<UppyFile[]>([])
   const [uploadedFiles, setUploadedFiles] = useState<UppyFile[]>([])
-  const [uppy] = useState(getUppy(useClient()))
+  const [uppy] = useState(getUppy(useClient(),null))
 
   const ListAndDownloadFiles = <FileDownload uppy={uppy} listFiles={files} uploadedFiles={uploadedFiles} isUploading={isUploading} />
 
