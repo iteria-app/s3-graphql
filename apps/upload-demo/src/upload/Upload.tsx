@@ -19,9 +19,8 @@ interface FileUploadProps {
   slot: JSX.Element
   onChange?: (options: OnChangeOptions) => any
 }
-debugger
+
 function FileUpload({ slot, uppy, onChange }: FileUploadProps) {
-  debugger
   const [isUploading, setIsUploading] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const [errorUploading, setErrorUploading] = useState<Error>()
@@ -29,7 +28,6 @@ function FileUpload({ slot, uppy, onChange }: FileUploadProps) {
   const [files, setFiles] = useState<UppyFile[]>([])
 
   useEffect(() => {
-    debugger
     uppy.on('complete', uploadComplete)
     uppy.on('file-added', filesChanged)
     uppy.on('file-removed', filesChanged)
@@ -38,7 +36,6 @@ function FileUpload({ slot, uppy, onChange }: FileUploadProps) {
   }, [uppy])
 
   useEffect(() => {
-    debugger
     if (typeof onChange === 'function') onChange({ isUploading, isPaused, files, uploadedFiles, errorUploading })
   }, [isUploading, isPaused, files, uploadedFiles, errorUploading])
 

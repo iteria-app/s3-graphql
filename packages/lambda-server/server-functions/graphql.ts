@@ -39,6 +39,7 @@ const typeDefs = gql`
     type CreateMultipartUploadReturn {
       uploadId: String!
       key: String!
+      e: String
     }
     type AbortMultipartUploadReturn {
       message: String!
@@ -138,8 +139,8 @@ const resolvers = {
       const fileKey = args.fileKey
       const metadata = args.metadata
       console.log(fileKey, metadata)
-      const { uploadId, key } = await initS3Upload(context, fileKey, metadata)
-      return { uploadId, key }
+      const { uploadId, key, e } = await initS3Upload(context, fileKey, metadata)
+      return { uploadId, key, e }
     },
     abortMultipartUpload: async (parent: undefined, args: uploadArgs, context: ServerContext) => {
       checkHeaders(context)

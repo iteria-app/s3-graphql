@@ -16,5 +16,5 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["./src"],
+  "include": ["apps/upload-demo", "packages/client", "packages/lambda-server"],
 }
