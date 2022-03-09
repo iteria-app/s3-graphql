@@ -46,7 +46,6 @@ export function getDownloadUrls(fileKeys: string[]) {
     const { urls } = downloadGetUrls
     return urls
   }
-  return ''
 }
 
 export function getDownloadUrl(fileKey: string) {
@@ -63,7 +62,6 @@ export function getDownloadUrl(fileKey: string) {
     const { url } = downloadGetUrl
     return url
   }
-  return ''
 }
 
 export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
@@ -226,4 +224,34 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
       console.log(error.message)
     }
   }
+}
+
+export const downloadAs = (url: string, fileName: string) => {
+  fetch(url, {
+    method: 'GET',
+  })
+    .then(function (resp) {
+      return resp.blob()
+    })
+    .then(function (blob) {
+      const newBlob = new Blob([blob])
+
+      // IE doesn't allow using a blob object directly as link href
+      // instead it is necessary to use msSaveOrOpenBlob
+      const nav = window.navigator as any
+      if (nav && nav.msSaveOrOpenBlob) {
+        nav.msSaveOrOpenBlob(newBlob)
+        return
+      }
+      const data = window.URL.createObjectURL(newBlob)
+      const link = document.createElement('a')
+      //link.dataType = "json";
+      link.href = data
+      link.download = fileName
+      link.dispatchEvent(new MouseEvent('click'))
+      setTimeout(function () {
+        // For Firefox it is necessary to delay revoking the ObjectURL
+        window.URL.revokeObjectURL(data), 60
+      })
+    })
 }

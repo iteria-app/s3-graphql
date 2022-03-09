@@ -5,6 +5,7 @@ dist
 dist-ssr
 *.local
 codegen.yaml
+.turbo
 
 
 # Logs

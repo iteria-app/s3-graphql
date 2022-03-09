@@ -36,7 +36,7 @@ export const initS3Upload = async ( config:ServerContext, fileKey: string, metad
     return { uploadId: UploadId, key: Key }
   } catch (e) {
     (e instanceof Error)? console.log(e.message) : ''
-    return {}
+    return {e}
   }
 }
 
