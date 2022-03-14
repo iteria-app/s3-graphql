@@ -2,7 +2,7 @@ import { ApolloServer, gql } from 'apollo-server-lambda';
 import { Handler, Context, Callback, APIGatewayEvent } from 'aws-lambda'
 import { findDOMNode } from 'react-dom';
 import { checkHeaders } from '../helpers/checkHeaders';
-import { abortMultipartUpload, completeMultipartUpload, getS3, getUrlsForParts, initS3Upload, listParts } from '../s3';
+import { abortMultipartUpload, completeMultipartUpload, newS3Client, getUrlsForParts, initS3Upload, listParts } from '../s3';
 import { ServerContext } from '../s3/types';
 
 const typeDefs = gql` 
@@ -87,7 +87,7 @@ const resolvers = {
   Query: {
     downloadGetUrls: async (parent: undefined, args: downloadGetUrlsArgs, context: ServerContext) => {
       checkHeaders(context)
-      const s3 = getS3(context)
+      const s3 = newS3Client(context)
       let urls: string[]
       urls=[]
       await args.fileKeys.reduce(async (promise, fileKey) => {
@@ -105,7 +105,7 @@ const resolvers = {
     },
     downloadGetUrl: async (parent: undefined, args: downloadGetUrlArgs, context: ServerContext) => {
       checkHeaders(context)
-      const s3 = getS3(context)
+      const s3 = newS3Client(context)
       const fileKey = args.fileKey
       const url = await s3.getSignedUrlPromise('getObject', {
         Bucket: context.bucketName,

@@ -1,6 +1,6 @@
 {
-    "name": "lambda-server",
-    "version": "0.0.0",
+    "name": "@iteria-app/s3-graphql-server",
+    "version": "0.0.1",
     "packageManager": "pnpm@6.28.0",
       "scripts": {
       "build": "netlify-lambda --config ./webpack.lambda.js build /server-functions",

@@ -5,7 +5,7 @@ import https from 'https'
 import AWS from 'aws-sdk'
 import { ServerContext } from './types'
 
-export function getS3(config: ServerContext){
+export function newS3Client(config: ServerContext){
   const s3 = new AWS.S3({
     accessKeyId: config.accessKeyId,
     secretAccessKey: config.secretAccessKey,
@@ -23,7 +23,7 @@ export function getS3(config: ServerContext){
 }
 
 export const initS3Upload = async ( config:ServerContext, fileKey: string, metadata: any ) => {
-  const s3 = getS3(config)
+  const s3 = newS3Client(config)
   try {
     config.precreateBucket && (await createBucketIfDoesNotExist(s3, config.bucketName as string, config.region as string))
     const params: S3.Types.CreateMultipartUploadRequest = {
@@ -41,7 +41,7 @@ export const initS3Upload = async ( config:ServerContext, fileKey: string, metad
 }
 
 export const getUrlsForParts = async (config:ServerContext, uploadId: string, fileKey: string, partNumber: number) => {
-  const s3 = getS3(config)
+  const s3 = newS3Client(config)
   const params = {
     Bucket: config.bucketName,
     Key: fileKey,
@@ -53,7 +53,7 @@ export const getUrlsForParts = async (config:ServerContext, uploadId: string, fi
 }
 
 export const listParts = async (config:ServerContext, uploadId: string, fileKey: string) => {
-  const s3 = getS3(config)
+  const s3 = newS3Client(config)
   const params = {
     Bucket: config.bucketName as string,
     Key: fileKey,
@@ -68,7 +68,7 @@ export const listParts = async (config:ServerContext, uploadId: string, fileKey:
 }
 
 export const completeMultipartUpload = async (config:ServerContext, uploadId: string, fileKey: string, parts: any) => {
-  const s3 = getS3(config)
+  const s3 = newS3Client(config)
   const params: S3.CompleteMultipartUploadRequest = {
     Bucket: config.bucketName as string,
     Key: fileKey,
@@ -80,7 +80,7 @@ export const completeMultipartUpload = async (config:ServerContext, uploadId: st
 }
 
 export const abortMultipartUpload = async (config:ServerContext, uploadId: string, fileKey: string) => {
-  const s3 = getS3(config)
+  const s3 = newS3Client(config)
   const params = {
     Bucket: config.bucketName as string,
     Key: fileKey,

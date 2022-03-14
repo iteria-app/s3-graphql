@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import FileDownload from './upload/Download'
 import FileUpload, { OnChangeOptions } from './upload/Upload'
-import { getUppy } from 'client/src/components/uppy/uppy'
+import { getUppy } from '@iteria-app/s3-graphql-client/src/components/uppy/uppy'
 import { UppyFile } from '@uppy/core'
 import { useClient } from 'urql'
 
