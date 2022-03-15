@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import UploadDemo from './UploadDemo'
 import './App.css'
 import { createClient, Provider } from 'urql';

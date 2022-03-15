@@ -1,17 +1,14 @@
 {
-  "name": "react-lambda-graphql",
-  "version": "0.0.0",
+  "name": "@iteria-app/s3-graphql",
+  "version": "0.0.1",
   "packageManager": "pnpm@6.28.0",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
-  "scripts": {
-  },
-  "dependencies": {
-    
-  },
+  "scripts": {},
+  "dependencies": {},
   "devDependencies": {
     "turbo": "^1.1.4"
-      }
+  }
 }

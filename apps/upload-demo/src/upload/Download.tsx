@@ -4,9 +4,8 @@ import '@uppy/drag-drop/dist/style.css'
 import '@uppy/progress-bar/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import './Download.css'
-import { GetUrlReturn, useDownloadGetUrlQuery } from '../../../../packages/client/src/components/uppy/graphql'
+import { GetUrlReturn, useDownloadGetUrlQuery } from '@iteria-app/s3-graphql-client/src/components/uppy/graphql'
 import type { Uppy, UppyFile } from '@uppy/core'
-//import { urqlClient } from '../../helpers/urqlClient'
 
 interface FileDownloadProps {
   uppy: Uppy
@@ -55,7 +54,7 @@ function FileDownload({ uppy, listFiles, uploadedFiles, isUploading }: FileDownl
     </div>
   )
 
-  async function downloadFile(file: any) {
+  async function downloadFile(file: UppyFile) {
     try {
       setFileKey(file.name)
     } catch (error: any) {

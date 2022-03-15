@@ -28,7 +28,7 @@ function getUploadedParts(uploadId: string) {
   return _uploadedParts
 }
 
-;(window as any)['uploadedParts'] = uploadedParts
+(window as any)['uploadedParts'] = uploadedParts
 
 export function getDownloadUrls(fileKeys: string[]) {
   const [result] = useDownloadGetUrlsQuery({
@@ -97,7 +97,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     })
     return await new Promise((resolve) => {
       try {
-        urqlClient.executeMutation(request)((result) => {
+        urqlClient.executeMutation(request)
+        ((result) => {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) {
@@ -123,7 +124,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
           partNumber: partNumber,
         } as PrepareUploadPartsQueryVariables)
         await new Promise((r) => {
-          urqlClient.executeQuery(request)((result) => {
+          urqlClient.executeQuery(request)
+          ((result) => {
             if (typeof result === 'object') {
               const { data } = result[0] as any
               if (data) {
@@ -150,7 +152,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     } as ListPartsQueryVariables)
     return await new Promise((r) => {
       try {
-        urqlClient.executeQuery(request)((result) => {
+        urqlClient.executeQuery(request)
+        ((result) => {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) {
@@ -187,7 +190,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     } as CompleteMultipartUploadMutationVariables)
     return await new Promise((r) => {
       try {
-        urqlClient.executeMutation(request)((result) => {
+        urqlClient.executeMutation(request)
+        ((result) => {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) {
@@ -213,7 +217,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
         uploadId,
       } as AbortMultipartUploadMutationVariables)
       return await new Promise((r) => {
-        urqlClient.executeMutation(request)((result) => {
+        urqlClient.executeMutation(request)
+        ((result) => {
           if (typeof result === 'object') {
             const { data } = result[0] as any
             if (data) r()

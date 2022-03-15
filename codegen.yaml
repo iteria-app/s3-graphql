@@ -1,8 +1,8 @@
 overwrite: true
 schema:
-  - "https://....hasura.app/v1/graphql":
+  - ${VITE_HASURA_GRAPHQL_ENDPOINT}
       headers:
-        X-HASURA-ADMIN-SECRET: ""
+        X-HASURA-ADMIN-SECRET: ${VITE_HASURA_GRAPHQL_SECRET}
 
 documents:
   - "./src/**/*.ts"
