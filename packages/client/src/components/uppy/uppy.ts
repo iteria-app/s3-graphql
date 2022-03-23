@@ -20,7 +20,12 @@ import {
 import { createRequest } from "urql";
 import type { Client } from "urql";
 
-const uploadedParts: { [x: string]: any[] } = {};
+interface MetaData {
+  key: string;
+  partNumbers: number[];
+  uploadId: string;
+}
+const uploadedParts: { [x: string]: AwsS3Part[] } = {};
 
 function getUploadedParts(uploadId: string) {
   const _uploadedParts = uploadedParts[uploadId] || [];
@@ -28,7 +33,7 @@ function getUploadedParts(uploadId: string) {
   return _uploadedParts;
 }
 
-(window as any)["uploadedParts"] = uploadedParts;
+(window as Window)["uploadedParts"] = uploadedParts;
 
 export function getDownloadUrls(fileKeys: string[]) {
   const [result] = useDownloadGetUrlsQuery({
@@ -85,11 +90,14 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     abortMultipartUpload,
   });
 
-  uppy.on("s3-multipart:part-uploaded" as any, (file: any, part: any) => {
-    const uploadedParts = getUploadedParts(file.s3Multipart.uploadId);
-    uploadedParts.push(part);
-  });
-  (window as any)["uppy"] = uppy;
+  uppy.on(
+    "s3-multipart:part-uploaded" as any,
+    (file: UppyFile, part: AwsS3Part) => {
+      const uploadedParts = getUploadedParts(file.s3Multipart.uploadId);
+      uploadedParts.push(part);
+    }
+  );
+  (window as Window)["uppy"] = uppy;
   return uppy;
 
   // Initiate multipart upload
@@ -117,7 +125,7 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     });
   }
   // Get presigned url for each part
-  async function prepareUploadParts(data: any, metadata: any) {
+  async function prepareUploadParts(data: UppyFile, metadata: MetaData) {
     const urls: { [key: string]: string } = {};
     try {
       for (const partNumber of metadata.partNumbers) {
@@ -145,7 +153,7 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     return { presignedUrls: urls };
   }
   async function listParts(
-    file: any,
+    file: UppyFile,
     { uploadId, key }: { uploadId: string; key: string }
   ): Promise<AwsS3Part[]> {
     const request = createRequest(ListPartsDocument, {
@@ -181,8 +189,12 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
   }
   //
   async function completeMultipartUpload(
-    file: any,
-    { uploadId, key, parts }: any
+    file: UppyFile,
+    {
+      uploadId,
+      key,
+      parts,
+    }: { uploadId: string; key: string; parts: AwsS3Part[] }
   ): Promise<{ location: string }> {
     const request = createRequest(CompleteMultipartUploadDocument, {
       fileKey: key,
@@ -209,7 +221,7 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
   }
   //
   async function abortMultipartUpload(
-    file: any,
+    file: UppyFile,
     { key, uploadId }: { key: string; uploadId: string }
   ): Promise<void> {
     try {
@@ -244,7 +256,7 @@ export const downloadAs = (url: string, fileName: string) => {
 
       // IE doesn't allow using a blob object directly as link href
       // instead it is necessary to use msSaveOrOpenBlob
-      const nav = window.navigator as any;
+      const nav = window.navigator as Navigator;
       if (nav && nav.msSaveOrOpenBlob) {
         nav.msSaveOrOpenBlob(newBlob);
         return;
