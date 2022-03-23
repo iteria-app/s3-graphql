@@ -1,5 +1,5 @@
-import Uppy, { UppyFile } from '@uppy/core'
-import AwsS3Multipart, { AwsS3Part } from '@uppy/aws-s3-multipart'
+import Uppy, { UppyFile } from "@uppy/core";
+import AwsS3Multipart, { AwsS3Part } from "@uppy/aws-s3-multipart";
 import {
   AbortMultipartUploadDocument,
   AbortMultipartUploadMutationVariables,
@@ -16,19 +16,19 @@ import {
   useDownloadGetUrlQuery,
   useDownloadGetUrlsQuery,
   GetUrlsReturn,
-} from './graphql'
-import { createRequest } from 'urql'
-import type { Client } from 'urql'
+} from "./graphql";
+import { createRequest } from "urql";
+import type { Client } from "urql";
 
-const uploadedParts: { [x: string]: any[] } = {}
+const uploadedParts: { [x: string]: any[] } = {};
 
 function getUploadedParts(uploadId: string) {
-  const _uploadedParts = uploadedParts[uploadId] || []
-  uploadedParts[uploadId] = _uploadedParts
-  return _uploadedParts
+  const _uploadedParts = uploadedParts[uploadId] || [];
+  uploadedParts[uploadId] = _uploadedParts;
+  return _uploadedParts;
 }
 
-(window as any)['uploadedParts'] = uploadedParts
+(window as any)["uploadedParts"] = uploadedParts;
 
 export function getDownloadUrls(fileKeys: string[]) {
   const [result] = useDownloadGetUrlsQuery({
@@ -36,15 +36,17 @@ export function getDownloadUrls(fileKeys: string[]) {
       fileKeys: fileKeys,
     },
     pause: !fileKeys,
-  })
+  });
   if (fileKeys && result.data) {
     const { downloadGetUrls } = result.data as {
-      downloadGetUrls: GetUrlsReturn
-    }
+      downloadGetUrls: GetUrlsReturn;
+    };
     if (!downloadGetUrls || !downloadGetUrls.urls)
-      throw Error(result.error ? result.error.message : 'No download url found')
-    const { urls } = downloadGetUrls
-    return urls
+      throw Error(
+        result.error ? result.error.message : "No download url found"
+      );
+    const { urls } = downloadGetUrls;
+    return urls;
   }
 }
 
@@ -54,39 +56,41 @@ export function getDownloadUrl(fileKey: string) {
       fileKey: fileKey,
     },
     pause: !fileKey,
-  })
+  });
   if (fileKey && result.data) {
-    const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn }
+    const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn };
     if (!downloadGetUrl || !downloadGetUrl.url)
-      throw Error(result.error ? result.error.message : 'No download url found')
-    const { url } = downloadGetUrl
-    return url
+      throw Error(
+        result.error ? result.error.message : "No download url found"
+      );
+    const { url } = downloadGetUrl;
+    return url;
   }
 }
 
 export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
   const uppy = new Uppy({
-    meta: { type: 'avatar' },
+    meta: { type: "avatar" },
     restrictions: {
       allowedFileTypes: allowedFileTypes,
     },
     autoProceed: true,
     debug: true,
-  })
+  });
   uppy.use(AwsS3Multipart, {
     createMultipartUpload,
     prepareUploadParts,
     listParts,
     completeMultipartUpload,
     abortMultipartUpload,
-  })
+  });
 
-  uppy.on('s3-multipart:part-uploaded' as any, (file: any, part: any) => {
-    const uploadedParts = getUploadedParts(file.s3Multipart.uploadId)
-    uploadedParts.push(part)
-  })
-  ;(window as any)['uppy'] = uppy
-  return uppy
+  uppy.on("s3-multipart:part-uploaded" as any, (file: any, part: any) => {
+    const uploadedParts = getUploadedParts(file.s3Multipart.uploadId);
+    uploadedParts.push(part);
+  });
+  (window as any)["uppy"] = uppy;
+  return uppy;
 
   // Initiate multipart upload
   async function createMultipartUpload({
@@ -94,53 +98,51 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
   }: UppyFile): Promise<{ key: string; uploadId: string }> {
     const request = createRequest(CreateMultipartUploadDocument, {
       fileKey: name,
-    })
+    });
     return await new Promise((resolve) => {
       try {
-        urqlClient.executeMutation(request)
-        ((result) => {
-          if (typeof result === 'object') {
-            const { data } = result[0] as any
+        urqlClient.executeMutation(request)((result) => {
+          if (typeof result === "object") {
+            const { data } = result[0] as any;
             if (data) {
               const { key, uploadId } =
-                data.createMultipartUpload as CreateMultipartUploadReturn
-              resolve({ key, uploadId })
+                data.createMultipartUpload as CreateMultipartUploadReturn;
+              resolve({ key, uploadId });
             }
           }
-        })
+        });
       } catch (error: any) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    })
+    });
   }
   // Get presigned url for each part
   async function prepareUploadParts(data: any, metadata: any) {
-    const urls: { [key: string]: string } = {}
+    const urls: { [key: string]: string } = {};
     try {
       for (const partNumber of metadata.partNumbers) {
         const request = createRequest(PrepareUploadPartsDocument, {
           fileKey: metadata.key,
           uploadId: metadata.uploadId,
           partNumber: partNumber,
-        } as PrepareUploadPartsQueryVariables)
+        } as PrepareUploadPartsQueryVariables);
         await new Promise((r) => {
-          urqlClient.executeQuery(request)
-          ((result) => {
-            if (typeof result === 'object') {
-              const { data } = result[0] as any
+          urqlClient.executeQuery(request)((result) => {
+            if (typeof result === "object") {
+              const { data } = result[0] as any;
               if (data) {
-                const { url } = data.prepareUploadParts as GetUrlReturn
-                urls[partNumber] = url
-                r(undefined)
+                const { url } = data.prepareUploadParts as GetUrlReturn;
+                urls[partNumber] = url;
+                r(undefined);
               }
             }
-          })
-        })
+          });
+        });
       }
     } catch (error: any) {
-      console.log(error.message)
+      console.log(error.message);
     }
-    return { presignedUrls: urls }
+    return { presignedUrls: urls };
   }
   async function listParts(
     file: any,
@@ -149,15 +151,14 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
     const request = createRequest(ListPartsDocument, {
       fileKey: key,
       uploadId,
-    } as ListPartsQueryVariables)
+    } as ListPartsQueryVariables);
     return await new Promise((r) => {
       try {
-        urqlClient.executeQuery(request)
-        ((result) => {
-          if (typeof result === 'object') {
-            const { data } = result[0] as any
+        urqlClient.executeQuery(request)((result) => {
+          if (typeof result === "object") {
+            const { data } = result[0] as any;
             if (data) {
-              const parts = data.listParts as AwsS3Part[]
+              const parts = data.listParts as AwsS3Part[];
               const _parts = parts
                 .map((part) => ({
                   ETag: part.ETag,
@@ -168,15 +169,15 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
                   getUploadedParts(uploadId).find(
                     (p) => p.PartNumber === part.PartNumber
                   )
-                )
-              r(_parts)
+                );
+              r(_parts);
             }
           }
-        })
+        });
       } catch (error: any) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    })
+    });
   }
   //
   async function completeMultipartUpload(
@@ -187,24 +188,24 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
       fileKey: key,
       uploadId,
       parts,
-    } as CompleteMultipartUploadMutationVariables)
+    } as CompleteMultipartUploadMutationVariables);
     return await new Promise((r) => {
       try {
-        urqlClient.executeMutation(request)
-        ((result) => {
-          if (typeof result === 'object') {
-            const { data } = result[0] as any
+        urqlClient.executeMutation(request)((result) => {
+          if (typeof result === "object") {
+            const { data } = result[0] as any;
             if (data) {
               const { location } =
-                data.completeMultipartUpload as CompleteMultipartUploadReturn
-              r({ location })
+                data.completeMultipartUpload as CompleteMultipartUploadReturn;
+              r({ location });
             }
           }
-        })
+        });
+        delete uploadedParts[uploadId];
       } catch (error: any) {
-        console.log(error.message)
+        console.log(error.message);
       }
-    })
+    });
   }
   //
   async function abortMultipartUpload(
@@ -215,48 +216,48 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
       const request = createRequest(AbortMultipartUploadDocument, {
         fileKey: key,
         uploadId,
-      } as AbortMultipartUploadMutationVariables)
+      } as AbortMultipartUploadMutationVariables);
       return await new Promise((r) => {
-        urqlClient.executeMutation(request)
-        ((result) => {
-          if (typeof result === 'object') {
-            const { data } = result[0] as any
-            if (data) r()
+        urqlClient.executeMutation(request)((result) => {
+          if (typeof result === "object") {
+            const { data } = result[0] as any;
+            if (data) r();
           }
-        })
-      })
+        });
+        delete uploadedParts[uploadId];
+      });
     } catch (error: any) {
-      console.log(error.message)
+      console.log(error.message);
     }
   }
 }
 
 export const downloadAs = (url: string, fileName: string) => {
   fetch(url, {
-    method: 'GET',
+    method: "GET",
   })
     .then(function (resp) {
-      return resp.blob()
+      return resp.blob();
     })
     .then(function (blob) {
-      const newBlob = new Blob([blob])
+      const newBlob = new Blob([blob]);
 
       // IE doesn't allow using a blob object directly as link href
       // instead it is necessary to use msSaveOrOpenBlob
-      const nav = window.navigator as any
+      const nav = window.navigator as any;
       if (nav && nav.msSaveOrOpenBlob) {
-        nav.msSaveOrOpenBlob(newBlob)
-        return
+        nav.msSaveOrOpenBlob(newBlob);
+        return;
       }
-      const data = window.URL.createObjectURL(newBlob)
-      const link = document.createElement('a')
+      const data = window.URL.createObjectURL(newBlob);
+      const link = document.createElement("a");
       //link.dataType = "json";
-      link.href = data
-      link.download = fileName
-      link.dispatchEvent(new MouseEvent('click'))
+      link.href = data;
+      link.download = fileName;
+      link.dispatchEvent(new MouseEvent("click"));
       setTimeout(function () {
         // For Firefox it is necessary to delay revoking the ObjectURL
-        window.URL.revokeObjectURL(data), 60
-      })
-    })
-}
+        window.URL.revokeObjectURL(data), 60;
+      });
+    });
+};
