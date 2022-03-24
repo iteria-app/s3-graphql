@@ -1,0 +1,16 @@
+overwrite: true
+schema:
+  - ${VITE_HASURA_GRAPHQL_ENDPOINT}
+      headers:
+        X-HASURA-ADMIN-SECRET: ${VITE_HASURA_GRAPHQL_SECRET}
+
+documents:
+  - "./src/**/*.ts"
+  - "./src/**/*.tsx"
+  - "src/**/*.graphql"
+generates:
+  src/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-urql

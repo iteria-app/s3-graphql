@@ -1,0 +1,14 @@
+{
+  "name": "@iteria-app/s3-graphql",
+  "version": "0.0.1",
+  "packageManager": "pnpm@6.28.0",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {
+    "turbo": "^1.1.4"
+  }
+}
