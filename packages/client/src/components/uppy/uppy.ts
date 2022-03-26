@@ -20,6 +20,23 @@ import {
 import { createRequest } from "urql";
 import type { Client } from "urql";
 
+declare global {
+  interface Navigator {
+    msSaveOrOpenBlob: (blob: Blob) => void;
+  }
+  interface Window {
+    uploadedParts: { [x: string]: AwsS3Part[] };
+    uppy: Uppy;
+  }
+}
+
+type s3MultipartFile = UppyFile & {
+  s3Multipart: {
+    key: string;
+    uploadId: string;
+  };
+};
+
 interface MetaData {
   key: string;
   partNumbers: number[];
@@ -92,7 +109,8 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
 
   uppy.on(
     "s3-multipart:part-uploaded" as any,
-    (file: UppyFile, part: AwsS3Part) => {
+    (file: s3MultipartFile, part: AwsS3Part) => {
+      debugger;
       const uploadedParts = getUploadedParts(file.s3Multipart.uploadId);
       uploadedParts.push(part);
     }
