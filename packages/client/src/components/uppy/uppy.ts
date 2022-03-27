@@ -13,9 +13,10 @@ import {
   CreateMultipartUploadReturn,
   ListPartsDocument,
   ListPartsQueryVariables,
-  useDownloadGetUrlQuery,
-  useDownloadGetUrlsQuery,
   GetUrlsReturn,
+  DownloadGetUrlDocument,
+  DownloadGetUrlsDocument,
+  Maybe,
 } from "./graphql";
 import { createRequest } from "urql";
 import type { Client } from "urql";
@@ -52,42 +53,54 @@ function getUploadedParts(uploadId: string) {
 
 (window as Window)["uploadedParts"] = uploadedParts;
 
-export function getDownloadUrls(fileKeys: string[]) {
-  const [result] = useDownloadGetUrlsQuery({
-    variables: {
-      fileKeys: fileKeys,
-    },
-    pause: !fileKeys,
+export async function getDownloadUrls(
+  urqlClient: Client,
+  fileKeys: string[]
+): Promise<{ urls: Maybe<string>[] }> {
+  const request = createRequest(DownloadGetUrlsDocument, {
+    fileKeys: fileKeys,
   });
-  if (fileKeys && result.data) {
-    const { downloadGetUrls } = result.data as {
-      downloadGetUrls: GetUrlsReturn;
-    };
-    if (!downloadGetUrls || !downloadGetUrls.urls)
-      throw Error(
-        result.error ? result.error.message : "No download url found"
-      );
-    const { urls } = downloadGetUrls;
-    return urls;
-  }
+  return await new Promise((resolve) => {
+    try {
+      urqlClient.executeQuery(request)((result) => {
+        if (typeof result === "object") {
+          const { data } = result[0] as any;
+          if (data) {
+            debugger;
+            const { urls } = data.downloadGetUrl as GetUrlsReturn;
+            resolve({ urls });
+          }
+        }
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  });
 }
 
-export function getDownloadUrl(fileKey: string) {
-  const [result] = useDownloadGetUrlQuery({
-    variables: {
-      fileKey: fileKey,
-    },
-    pause: !fileKey,
+export async function getDownloadUrl(
+  urqlClient: Client,
+  fileKey: string
+): Promise<{ url: string }> {
+  const request = createRequest(DownloadGetUrlDocument, {
+    fileKey: fileKey,
   });
-  if (fileKey && result.data) {
-    const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn };
-    if (!downloadGetUrl || !downloadGetUrl.url)
-      throw Error(
-        result.error ? result.error.message : "No download url found"
-      );
-    const { url } = downloadGetUrl;
-    return url;
-  }
+  return await new Promise((resolve) => {
+    try {
+      urqlClient.executeQuery(request)((result) => {
+        if (typeof result === "object") {
+          const { data } = result[0] as any;
+          if (data) {
+            debugger;
+            const { url } = data.downloadGetUrl as GetUrlReturn;
+            resolve({ url });
+          }
+        }
+      });
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  });
 }
 
 export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
