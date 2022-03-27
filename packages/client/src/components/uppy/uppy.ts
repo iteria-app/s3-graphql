@@ -66,8 +66,7 @@ export async function getDownloadUrls(
         if (typeof result === "object") {
           const { data } = result[0] as any;
           if (data) {
-            debugger;
-            const { urls } = data.downloadGetUrl as GetUrlsReturn;
+            const { urls } = data.downloadGetUrls as GetUrlsReturn;
             resolve({ urls });
           }
         }
@@ -91,7 +90,6 @@ export async function getDownloadUrl(
         if (typeof result === "object") {
           const { data } = result[0] as any;
           if (data) {
-            debugger;
             const { url } = data.downloadGetUrl as GetUrlReturn;
             resolve({ url });
           }
