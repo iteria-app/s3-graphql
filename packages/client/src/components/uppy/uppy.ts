@@ -110,7 +110,6 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
   uppy.on(
     "s3-multipart:part-uploaded" as any,
     (file: s3MultipartFile, part: AwsS3Part) => {
-      debugger;
       const uploadedParts = getUploadedParts(file.s3Multipart.uploadId);
       uploadedParts.push(part);
     }
