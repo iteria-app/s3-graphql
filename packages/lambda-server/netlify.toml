@@ -9,5 +9,6 @@
   publish = "dist"
   functions = "built-lambda-server"
 
-  [functions]
+[functions]
   node_bundler = "esbuild"
+  external_node_modules = ["express"]
