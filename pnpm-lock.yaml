@@ -77,6 +77,7 @@ importers:
       apollo-server-lambda: ^3.6.2
       aws-sdk: ^2.1070.0
       encoding: ^0.1.13
+      express: ^4.18.1
       graphql: ^16.3.0
       graphql-tag: ^2.12.6
       netlify-cli: ^8.18.1
@@ -88,6 +89,7 @@ importers:
       '@types/aws-lambda': 8.10.93
       apollo-server-lambda: 3.6.4_encoding@0.1.13+graphql@16.3.0
       aws-sdk: 2.1096.0
+      express: 4.18.1
       graphql: 16.3.0
       graphql-tag: 2.12.6_graphql@16.3.0
       netlify-lambda: 2.0.15
@@ -227,7 +229,7 @@ packages:
       '@babel/core': ^7.0.0
     dependencies:
       '@babel/compat-data': 7.17.7
-      '@babel/core': 7.17.8
+      '@babel/core': 7.17.8_supports-color@9.2.1
       '@babel/helper-validator-option': 7.16.7
       browserslist: 4.20.2
       semver: 6.3.0
