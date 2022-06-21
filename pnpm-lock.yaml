@@ -78,7 +78,6 @@ importers:
       aws-sdk: ^2.1070.0
       encoding: ^0.1.13
       graphql: ^16.3.0
-      graphql-tag: ^2.12.6
       netlify-cli: ^8.18.1
       netlify-lambda: ^2.0.15
       react-dom: ^17.0.2
@@ -89,7 +88,6 @@ importers:
       apollo-server-lambda: 3.6.4_encoding@0.1.13+graphql@16.3.0
       aws-sdk: 2.1096.0
       graphql: 16.3.0
-      graphql-tag: 2.12.6_graphql@16.3.0
       netlify-lambda: 2.0.15
       react-dom: 17.0.2
     devDependencies:
@@ -98,7 +96,7 @@ importers:
       '@graphql-codegen/typescript': 2.4.8_encoding@0.1.13+graphql@16.3.0
       '@graphql-codegen/typescript-document-nodes': 2.2.8_encoding@0.1.13+graphql@16.3.0
       '@graphql-codegen/typescript-operations': 2.3.5_encoding@0.1.13+graphql@16.3.0
-      '@graphql-codegen/typescript-urql': 3.5.6_263faff131abf9daf53c18285f375295
+      '@graphql-codegen/typescript-urql': 3.5.6_encoding@0.1.13+graphql@16.3.0
       '@graphql-codegen/urql-introspection': 2.1.1_graphql@16.3.0
       '@types/react-dom': 17.0.14
       encoding: 0.1.13
@@ -227,7 +225,7 @@ packages:
       '@babel/core': ^7.0.0
     dependencies:
       '@babel/compat-data': 7.17.7
-      '@babel/core': 7.17.8
+      '@babel/core': 7.17.8_supports-color@9.2.1
       '@babel/helper-validator-option': 7.16.7
       browserslist: 4.20.2
       semver: 6.3.0
@@ -1927,7 +1925,7 @@ packages:
       - supports-color
     dev: true
 
-  /@graphql-codegen/typescript-urql/3.5.6_263faff131abf9daf53c18285f375295:
+  /@graphql-codegen/typescript-urql/3.5.6_encoding@0.1.13+graphql@16.3.0:
     resolution: {integrity: sha512-gMoCCYnM8xiesX9+99bJUEG24L+/e0+UdZl3w0CuqcMMqUQUDpDvJjRxQeK6hMM0DkniB4LEE+9WOJKx96CSzw==}
     peerDependencies:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -1937,7 +1935,6 @@ packages:
       '@graphql-codegen/visitor-plugin-common': 2.7.4_encoding@0.1.13+graphql@16.3.0
       auto-bind: 4.0.0
       graphql: 16.3.0
-      graphql-tag: 2.12.6_graphql@16.3.0
       tslib: 2.3.1
     transitivePeerDependencies:
       - encoding
