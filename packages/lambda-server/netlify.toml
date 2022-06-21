@@ -1,4 +1,12 @@
+[build.environment]
+  NODE_VERSION = "14"
+  NPM_FLAGS = "--prefix=/dev/null"
+  NODE_OPTIONS = "--max_old_space_size=4096"
+
+
 [build]
-  command = "npm run build && npm run build" # the command you run to build this file
-  functions = "built-lambda-server" # netlify-lambda builds to this folder AND Netlify reads functions from here
-  
+  command = "npx pnpm@6.21.0 i --store=node_modules/.pnpm-store && npx pnpm@6.21.0 run build"
+  functions = "built-lambda-server"
+
+[functions]
+  node_bundler = "esbuild"

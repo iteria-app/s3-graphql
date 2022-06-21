@@ -1,34 +1,35 @@
 {
-    "name": "@iteria-app/s3-graphql-server",
-    "version": "0.0.1",
-    "packageManager": "pnpm@6.28.0",
-      "scripts": {
-      "build": "netlify-lambda --config ./webpack.lambda.js build /server-functions",
-      "start:lambda": "netlify-lambda --config ./webpack.lambda.js serve src/lambda-server/server-functions",
-      "debug": "npx --node-arg=--inspect  netlify-lambda -t 100 --config ./webpack.lambda.js serve src/lambda-server/server-functions",
-      "generate": "graphql-codegen --config codegen.yaml"
-    },
-    "dependencies": {
-      "@netlify/functions": "^0.11.0",
-      "@types/aws-lambda": "^8.10.92",
-      "apollo-server-lambda": "^3.6.2",
-      "aws-sdk": "^2.1070.0",
-      "graphql": "^16.3.0",
-      "graphql-tag": "^2.12.6",
-      "netlify-lambda": "^2.0.15",
-      "react-dom": "^17.0.2"
-    },
-    "devDependencies": {
-      "@babel/preset-typescript": "^7.16.7",
-      "@graphql-codegen/cli": "^2.6.0",
-      "@graphql-codegen/typescript": "^2.4.3",
-      "@graphql-codegen/typescript-document-nodes": "^2.2.3",
-      "@graphql-codegen/typescript-operations": "^2.3.0",
-      "@graphql-codegen/typescript-urql": "^3.5.1",
-      "@graphql-codegen/urql-introspection": "^2.1.1",
-      "@types/react-dom": "^17.0.10",
-      "encoding": "^0.1.13",
-      "netlify-cli": "^8.18.1",
-      "typescript": "^4.4.4"
-    }
+  "name": "@iteria-app/s3-graphql-server",
+  "version": "0.1.0",
+  "packageManager": "pnpm@6.28.0",
+  "scripts": {
+    "build": "netlify-lambda --config ./webpack.lambda.js build /server-functions",
+    "start:lambda": "netlify-lambda --config ./webpack.lambda.js serve src/lambda-server/server-functions",
+    "debug": "npx --node-arg=--inspect  netlify-lambda -t 100 --config ./webpack.lambda.js serve src/lambda-server/server-functions",
+    "generate": "graphql-codegen --config codegen.yaml"
+  },
+  "dependencies": {
+    "@netlify/functions": "^0.11.0",
+    "@types/aws-lambda": "^8.10.92",
+    "apollo-server-lambda": "^3.6.2",
+    "aws-sdk": "^2.1070.0",
+    "express": "^4.18.1",
+    "graphql": "^16.3.0",
+    "graphql-tag": "^2.12.6",
+    "netlify-lambda": "^2.0.15",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.16.7",
+    "@graphql-codegen/cli": "^2.6.0",
+    "@graphql-codegen/typescript": "^2.4.3",
+    "@graphql-codegen/typescript-document-nodes": "^2.2.3",
+    "@graphql-codegen/typescript-operations": "^2.3.0",
+    "@graphql-codegen/typescript-urql": "^3.5.1",
+    "@graphql-codegen/urql-introspection": "^2.1.1",
+    "@types/react-dom": "^17.0.10",
+    "encoding": "^0.1.13",
+    "netlify-cli": "^8.18.1",
+    "typescript": "^4.4.4"
   }
+}
