@@ -1,7 +1,8 @@
 {
   "name": "@iteria-app/s3-graphql-client",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "src/index.ts",
+  "module": "src/index.ts",
   "packageManager": "pnpm@6.28.0",
   "dependencies": {
     "@uppy/aws-s3-multipart": "^2.2.0",
