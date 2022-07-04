@@ -45,7 +45,7 @@ const typeDefs = gql`
       uploadId: String!
       partNumber: Int!
     ): GetUrlReturn
-    listParts(fileKey: String!, uploadId: String!): [Part]
+    listParts(fileKey: String!, uploadId: String!): Part
   }
   type CreateMultipartUploadReturn {
     uploadId: String!
