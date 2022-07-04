@@ -84,7 +84,7 @@ export const listParts = async (
       Size: p.Size,
       ETag: p.ETag ? JSON.parse(p.ETag) : "",
     }));
-  return { PartNumber: 1, Size: 1, ETag: "this sucks" };
+  return [{ PartNumber: 1, Size: 1, ETag: "this sucks" }];
 };
 
 export const completeMultipartUpload = async (
