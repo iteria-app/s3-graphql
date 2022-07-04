@@ -78,11 +78,13 @@ export const listParts = async (
     UploadId: uploadId,
   };
   const { Parts } = await s3.listParts(params).promise();
-  return Parts.map((p) => ({
-    PartNumber: p.PartNumber,
-    Size: p.Size,
-    ETag: p.ETag ? JSON.parse(p.ETag) : "",
-  }));
+  if (Parts)
+    return Parts.map((p) => ({
+      PartNumber: p.PartNumber,
+      Size: p.Size,
+      ETag: p.ETag ? JSON.parse(p.ETag) : "",
+    }));
+  return { PartNumber: 1, Size: 1, ETag: "this sucks" };
 };
 
 export const completeMultipartUpload = async (
