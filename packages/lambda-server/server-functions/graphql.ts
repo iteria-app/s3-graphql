@@ -169,7 +169,7 @@ const resolvers = {
       let parts = [];
       parts[0] = { PartNumber: 1, Size: 1, ETag: "this sucks" };
       parts[1] = { PartNumber: 2, Size: 2, ETag: "this sucks extra" };
-      return { parts };
+      return parts;
     },
   },
   Mutation: {
