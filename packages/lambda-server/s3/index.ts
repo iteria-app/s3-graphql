@@ -82,7 +82,7 @@ export const listParts = async (
     return Parts.map((p) => ({
       PartNumber: p.PartNumber,
       Size: p.Size,
-      ETag: p.ETag ? JSON.parse(p.ETag) : "",
+      ETag: p.ETag, //? JSON.parse(p.ETag) : "",
     }));
   return [{ PartNumber: 1, Size: 1, ETag: "this sucks" }];
 };
