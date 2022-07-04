@@ -21,12 +21,12 @@ const typeDefs = gql`
   }
   type Part {
     PartNumber: Int
-    size: Int
+    Size: Int
     ETag: String
   }
   input PartInput {
     PartNumber: Int
-    size: Int
+    Size: Int
     ETag: String
   }
   type GetUrlReturn {
