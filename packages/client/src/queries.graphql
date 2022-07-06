@@ -10,24 +10,31 @@ query downloadGetUrls($fileKeys: [String]!) {
   }
 }
 
- 
 mutation createMultipartUpload($fileKey: String!) {
   createMultipartUpload(fileKey: $fileKey) {
     uploadId
     key
   }
 }
- 
-query prepareUploadParts($fileKey: String!, $uploadId: String!, $partNumber: Int!) {
-  prepareUploadParts(fileKey: $fileKey, uploadId: $uploadId, partNumber: $partNumber) {
+
+query prepareUploadParts(
+  $fileKey: String!
+  $uploadId: String!
+  $partNumber: Int!
+) {
+  prepareUploadParts(
+    fileKey: $fileKey
+    uploadId: $uploadId
+    partNumber: $partNumber
+  ) {
     url
   }
 }
- 
+
 query listParts($fileKey: String!, $uploadId: String!) {
   listParts(fileKey: $fileKey, uploadId: $uploadId) {
     ETag
-    size
+    Size
     PartNumber
   }
 }
@@ -38,16 +45,22 @@ mutation abortMultipartUpload($fileKey: String!, $uploadId: String!) {
   }
 }
 
-input PartInput{
+input PartInput {
   PartNumber: Int
-  size: Int
+  Size: Int
   ETag: String
-}  
+}
 
-mutation completeMultipartUpload($fileKey: String!, $uploadId: String!, $parts: [PartInput]!) {
-  completeMultipartUpload(fileKey: $fileKey, uploadId: $uploadId, parts: $parts) {
+mutation completeMultipartUpload(
+  $fileKey: String!
+  $uploadId: String!
+  $parts: [PartInput]!
+) {
+  completeMultipartUpload(
+    fileKey: $fileKey
+    uploadId: $uploadId
+    parts: $parts
+  ) {
     location
   }
 }
- 
-
