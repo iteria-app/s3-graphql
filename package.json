@@ -6,9 +6,12 @@
     "packages/*",
     "apps/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "prettier-format-all": "prettier --write \"./**/*.{js,jsx,tsx}\""
+  },
   "dependencies": {},
   "devDependencies": {
-    "turbo": "^1.1.4"
+    "turbo": "^1.1.4",
+    "prettier": "2.4.1"
   }
 }
