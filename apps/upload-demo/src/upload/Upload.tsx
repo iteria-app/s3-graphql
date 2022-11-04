@@ -7,12 +7,12 @@ import '@uppy/progress-bar/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import './Upload.css'
 
-export interface OnChangeOptions{
+export interface OnChangeOptions {
   isUploading: boolean
   isPaused?: boolean
-  files:UppyFile[]
-  uploadedFiles:UppyFile[]
-  errorUploading?:Error
+  files: UppyFile[]
+  uploadedFiles: UppyFile[]
+  errorUploading?: Error
 }
 interface FileUploadProps {
   uppy: Uppy
@@ -36,7 +36,8 @@ function FileUpload({ slot, uppy, onChange }: FileUploadProps) {
   }, [uppy])
 
   useEffect(() => {
-    if (typeof onChange === 'function') onChange({ isUploading, isPaused, files, uploadedFiles, errorUploading })
+    if (typeof onChange === 'function')
+      onChange({ isUploading, isPaused, files, uploadedFiles, errorUploading })
   }, [isUploading, isPaused, files, uploadedFiles, errorUploading])
 
   return (
