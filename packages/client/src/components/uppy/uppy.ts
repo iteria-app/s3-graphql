@@ -25,10 +25,6 @@ declare global {
   interface Navigator {
     msSaveOrOpenBlob: (blob: Blob) => void;
   }
-  interface Window {
-    uploadedParts: { [x: string]: AwsS3Part[] };
-    uppy: Uppy;
-  }
 }
 
 type s3MultipartFile = UppyFile & {
@@ -50,8 +46,6 @@ function getUploadedParts(uploadId: string) {
   uploadedParts[uploadId] = _uploadedParts;
   return _uploadedParts;
 }
-
-(window as Window)["uploadedParts"] = uploadedParts;
 
 export async function getDownloadUrls(
   urqlClient: Client,
@@ -125,7 +119,6 @@ export function getUppy(urqlClient: Client, allowedFileTypes: string[] | null) {
       uploadedParts.push(part);
     }
   );
-  (window as Window)["uppy"] = uppy;
   return uppy;
 
   // Initiate multipart upload
@@ -284,12 +277,12 @@ export const downloadAs = (url: string, fileName: string) => {
 
       // IE doesn't allow using a blob object directly as link href
       // instead it is necessary to use msSaveOrOpenBlob
-      const nav = window.navigator as Navigator;
+      const nav = navigator as Navigator;
       if (nav && nav.msSaveOrOpenBlob) {
         nav.msSaveOrOpenBlob(newBlob);
         return;
       }
-      const data = window.URL.createObjectURL(newBlob);
+      const data = URL.createObjectURL(newBlob);
       const link = document.createElement("a");
       //link.dataType = "json";
       link.href = data;
@@ -297,7 +290,7 @@ export const downloadAs = (url: string, fileName: string) => {
       link.dispatchEvent(new MouseEvent("click"));
       setTimeout(function () {
         // For Firefox it is necessary to delay revoking the ObjectURL
-        window.URL.revokeObjectURL(data), 60;
+        URL.revokeObjectURL(data), 60;
       });
     });
 };
