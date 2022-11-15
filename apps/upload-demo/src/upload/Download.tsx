@@ -4,7 +4,10 @@ import '@uppy/drag-drop/dist/style.css'
 import '@uppy/progress-bar/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import './Download.css'
-import { GetUrlReturn, useDownloadGetUrlQuery } from '@iteria-app/s3-graphql-client/src/components/uppy/graphql'
+import {
+  GetUrlReturn,
+  useDownloadGetUrlQuery,
+} from '@iteria-app/s3-graphql-client/src/components/uppy/graphql'
 import type { Uppy, UppyFile } from '@uppy/core'
 
 interface FileDownloadProps {
@@ -14,7 +17,12 @@ interface FileDownloadProps {
   isUploading: boolean
 }
 
-function FileDownload({ uppy, listFiles, uploadedFiles, isUploading }: FileDownloadProps) {
+function FileDownload({
+  uppy,
+  listFiles,
+  uploadedFiles,
+  isUploading,
+}: FileDownloadProps) {
   const [fileKey, setFileKey] = React.useState('')
 
   const [result] = useDownloadGetUrlQuery({
@@ -27,7 +35,10 @@ function FileDownload({ uppy, listFiles, uploadedFiles, isUploading }: FileDownl
   useEffect(() => {
     if (fileKey && result.data) {
       const { downloadGetUrl } = result.data as { downloadGetUrl: GetUrlReturn }
-      if (!downloadGetUrl || !downloadGetUrl.url) throw Error(result.error ? result.error.message : 'No download url found')
+      if (!downloadGetUrl || !downloadGetUrl.url)
+        throw Error(
+          result.error ? result.error.message : 'No download url found'
+        )
       const { url } = downloadGetUrl
       const a = document.createElement('a')
       a.href = url
@@ -45,7 +56,11 @@ function FileDownload({ uppy, listFiles, uploadedFiles, isUploading }: FileDownl
           {uploadedFiles.find((f) => f.id + f.size === file.id + file.size) ? (
             <button onClick={() => downloadFile(file)}>download</button>
           ) : (
-            <button disabled={isUploading} style={{ opacity: isUploading ? 0 : 1 }} onClick={() => uppy.removeFile(file.id)}>
+            <button
+              disabled={isUploading}
+              style={{ opacity: isUploading ? 0 : 1 }}
+              onClick={() => uppy.removeFile(file.id)}
+            >
               ✕
             </button>
           )}
