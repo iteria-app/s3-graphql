@@ -7,8 +7,8 @@
   "dependencies": {
     "@uppy/aws-s3-multipart": "^2.2.0",
     "@uppy/core": "^2.1.4",
-    "graphql-tag": "^2.12.6",
-    "urql": "^2.1.3"
+    "@urql/core": "^3.1.1",
+    "graphql-tag": "^2.12.6"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.16.7",

@@ -50,6 +50,7 @@ importers:
       '@babel/preset-typescript': ^7.16.7
       '@uppy/aws-s3-multipart': ^2.2.0
       '@uppy/core': ^2.1.4
+      '@urql/core': ^3.1.1
       graphql-tag: ^2.12.6
       turbo: ^1.1.4
       typescript: ^4.4.4
@@ -57,6 +58,7 @@ importers:
     dependencies:
       '@uppy/aws-s3-multipart': 2.2.1_@uppy+core@2.1.6
       '@uppy/core': 2.1.6
+      '@urql/core': 3.1.1
       graphql-tag: 2.12.6
       urql: 2.2.0
     devDependencies:
@@ -3924,6 +3926,14 @@ packages:
     dependencies:
       '@graphql-typed-document-node/core': 3.1.1
       wonka: 4.0.15
+    dev: false
+
+  /@urql/core/3.1.1:
+    resolution: {integrity: sha512-Mnxtq4I4QeFJsgs7Iytw+HyhiGxISR6qtyk66c9tipozLZ6QVxrCiUPF2HY4BxNIabaxcp+rivadvm8NAnXj4Q==}
+    peerDependencies:
+      graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+    dependencies:
+      wonka: 6.1.2
     dev: false
 
   /@urql/introspection/0.3.1_graphql@16.3.0:
@@ -13187,6 +13197,10 @@ packages:
 
   /wonka/4.0.15:
     resolution: {integrity: sha512-U0IUQHKXXn6PFo9nqsHphVCE5m3IntqZNB9Jjn7EB1lrR7YTDY3YWgFvEvwniTzXSvOH/XMzAZaIfJF/LvHYXg==}
+    dev: false
+
+  /wonka/6.1.2:
+    resolution: {integrity: sha512-zNrXPMccg/7OEp9tSfFkMgTvhhowqasiSHdJ3eCZolXxVTV/aT6HUTofoZk9gwRbGoFey/Nss3JaZKUMKMbofg==}
     dev: false
 
   /word-wrap/1.2.3:
