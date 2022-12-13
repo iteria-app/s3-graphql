@@ -21,6 +21,7 @@ importers:
       '@uppy/progress-bar': ^2.0.4
       '@uppy/react': ^2.1.2
       '@vitejs/plugin-react': ^1.0.7
+      graphql-tag: ^2.12.6
       react: ^17.0.2
       react-dom: ^17.0.2
       turbo: ^1.1.4
@@ -34,6 +35,7 @@ importers:
       '@uppy/drag-drop': 2.0.6_@uppy+core@2.1.6
       '@uppy/progress-bar': 2.0.4_@uppy+core@2.1.6
       '@uppy/react': 2.1.2_@uppy+core@2.1.6+react@17.0.2
+      graphql-tag: 2.12.6
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       urql: 2.2.0_react@17.0.2
@@ -50,6 +52,7 @@ importers:
       '@babel/preset-typescript': ^7.16.7
       '@uppy/aws-s3-multipart': ^2.2.0
       '@uppy/core': ^2.1.4
+      '@urql/core': 2.4.3
       graphql-tag: ^2.12.6
       turbo: ^1.1.4
       typescript: ^4.4.4
@@ -57,6 +60,7 @@ importers:
     dependencies:
       '@uppy/aws-s3-multipart': 2.2.1_@uppy+core@2.1.6
       '@uppy/core': 2.1.6
+      '@urql/core': 2.4.3
       graphql-tag: 2.12.6
       urql: 2.2.0
     devDependencies:

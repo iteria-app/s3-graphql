@@ -1,4 +1,5 @@
 import gql from "graphql-tag";
+import * as Urql from "urql";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -314,6 +315,14 @@ export const DownloadGetUrlDocument = gql`
   }
 `;
 
+export function useDownloadGetUrlQuery(
+  options: Omit<Urql.UseQueryArgs<DownloadGetUrlQueryVariables>, "query">
+) {
+  return Urql.useQuery<DownloadGetUrlQuery>({
+    query: DownloadGetUrlDocument,
+    ...options,
+  });
+}
 export const DownloadGetUrlsDocument = gql`
   query downloadGetUrls($fileKeys: [String]!) {
     downloadGetUrls(fileKeys: $fileKeys) {
@@ -322,7 +331,14 @@ export const DownloadGetUrlsDocument = gql`
   }
 `;
 
-
+export function useDownloadGetUrlsQuery(
+  options: Omit<Urql.UseQueryArgs<DownloadGetUrlsQueryVariables>, "query">
+) {
+  return Urql.useQuery<DownloadGetUrlsQuery>({
+    query: DownloadGetUrlsDocument,
+    ...options,
+  });
+}
 export const CreateMultipartUploadDocument = gql`
   mutation createMultipartUpload($fileKey: String!) {
     createMultipartUpload(fileKey: $fileKey) {
@@ -332,6 +348,12 @@ export const CreateMultipartUploadDocument = gql`
   }
 `;
 
+export function useCreateMultipartUploadMutation() {
+  return Urql.useMutation<
+    CreateMultipartUploadMutation,
+    CreateMultipartUploadMutationVariables
+  >(CreateMultipartUploadDocument);
+}
 export const PrepareUploadPartsDocument = gql`
   query prepareUploadParts(
     $fileKey: String!
@@ -348,6 +370,14 @@ export const PrepareUploadPartsDocument = gql`
   }
 `;
 
+export function usePrepareUploadPartsQuery(
+  options: Omit<Urql.UseQueryArgs<PrepareUploadPartsQueryVariables>, "query">
+) {
+  return Urql.useQuery<PrepareUploadPartsQuery>({
+    query: PrepareUploadPartsDocument,
+    ...options,
+  });
+}
 export const ListPartsDocument = gql`
   query listParts($fileKey: String!, $uploadId: String!) {
     listParts(fileKey: $fileKey, uploadId: $uploadId) {
@@ -358,6 +388,14 @@ export const ListPartsDocument = gql`
   }
 `;
 
+export function useListPartsQuery(
+  options: Omit<Urql.UseQueryArgs<ListPartsQueryVariables>, "query">
+) {
+  return Urql.useQuery<ListPartsQuery>({
+    query: ListPartsDocument,
+    ...options,
+  });
+}
 export const AbortMultipartUploadDocument = gql`
   mutation abortMultipartUpload($fileKey: String!, $uploadId: String!) {
     abortMultipartUpload(fileKey: $fileKey, uploadId: $uploadId) {
@@ -366,6 +404,12 @@ export const AbortMultipartUploadDocument = gql`
   }
 `;
 
+export function useAbortMultipartUploadMutation() {
+  return Urql.useMutation<
+    AbortMultipartUploadMutation,
+    AbortMultipartUploadMutationVariables
+  >(AbortMultipartUploadDocument);
+}
 export const CompleteMultipartUploadDocument = gql`
   mutation completeMultipartUpload(
     $fileKey: String!
@@ -381,3 +425,10 @@ export const CompleteMultipartUploadDocument = gql`
     }
   }
 `;
+
+export function useCompleteMultipartUploadMutation() {
+  return Urql.useMutation<
+    CompleteMultipartUploadMutation,
+    CompleteMultipartUploadMutationVariables
+  >(CompleteMultipartUploadDocument);
+}

@@ -4,10 +4,8 @@ import '@uppy/drag-drop/dist/style.css'
 import '@uppy/progress-bar/dist/style.css'
 import '@uppy/dashboard/dist/style.css'
 import './Download.css'
-import {
-  GetUrlReturn,
-  useDownloadGetUrlQuery,
-} from '@iteria-app/s3-graphql-client/src/components/uppy/graphql'
+import { GetUrlReturn, useDownloadGetUrlQuery } from '../generated/graphql'
+//'@iteria-app/s3-graphql-client/src/components/uppy/graphql'
 import type { Uppy, UppyFile } from '@uppy/core'
 
 interface FileDownloadProps {
