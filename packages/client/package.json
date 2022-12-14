@@ -1,6 +1,6 @@
 {
   "name": "@iteria-app/s3-graphql-client",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "main": "src/index.ts",
   "module": "src/index.ts",
   "packageManager": "pnpm@6.28.0",
