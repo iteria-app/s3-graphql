@@ -18,9 +18,8 @@ import {
   DownloadGetUrlsDocument,
   Maybe,
 } from './graphql'
-import { createRequest } from 'urql'
-import type { Client } from 'urql'
-
+import { createRequest } from '@urql/core'
+import type { Client } from '@urql/core'
 declare global {
   interface Navigator {
     msSaveOrOpenBlob: (blob: Blob) => void
